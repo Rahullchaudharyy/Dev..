@@ -6,7 +6,7 @@ app.use("/test",(req,res)=>{
     res.send('Hello from the server')
 })
 app.use("/greet",(req,res)=>{
-    res.send('Nope helo helo helo' )
+    res.send('helo ...' )
 })
 
 
