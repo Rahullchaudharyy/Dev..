@@ -1,35 +1,31 @@
-const AdminAuth = (req, res, next) => {
-    const { Token } = req.body;
-    console.log("Token Recived = ", Token)
 
-    const IsAuthorized = Token === 'xstlnfkasd'
-    if (!IsAuthorized) {
-
-        res.status(401).send(' "Danger ⚠️" This request is not valid , We are sending the Report to the CBI For this Request for taking action !! ');
-    } else {
-
-        next();
-
+const jwt = require('jsonwebtoken');
+const { User } = require('../models/user.model');
+// const User = require('../models/user.model')
+const UserAuth =async (req, res, next) => {
+  try {
+    const cookeis = req.cookies;
+    const {token} = cookeis;
+  
+    if (!token) {
+      throw new Error("Token is not valid !")
     }
-}
-const UserAuth = (req, res, next) => {
-    const { Token } = req.body;
-    console.log("Token Recived = ", Token)
-
-    const IsAuthorized = Token === 'xstlnfkasd'
-    if (!IsAuthorized) {
-
-        res.status(401).send('Unauthorized Request');
-    } else {
-
-        next();
-
+       
+    const DecodedData = jwt.verify(token,"SERCRET@KEY123")
+  
+    const user = await User.findById({_id:DecodedData._id});
+  
+    if(!user){
+      throw new Error('User not found ')
     }
+    req.user = user // found user attahced into this request . Will be present in the request handler can be accessd like this :const user =  req.user 
+    next()
+  } catch (error) {
+    res.status(401).send("Error : " + error.message)
+  }  
 }
 
 module.exports = {
-    AdminAuth,
-    UserAuth,
-
-
+    // AdminAuth,
+    UserAuth
 }
