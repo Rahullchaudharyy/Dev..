@@ -22,7 +22,9 @@ profileRouter.get('/profile/view', UserAuth, async (req, res) => {
 
         // Dont need the Above code as it is already written in the Auth middleware . 
         const user = req.user // Comming from the middleware that is attached llike this , req.founduser = user 
-        res.json("Currently logged in : - " + user)
+        res.json({
+            "Currently logged in : ": user
+        })
 
     } catch (error) {
         res.status(401).send("Error occure : " + error.message)
