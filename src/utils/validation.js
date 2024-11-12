@@ -1,5 +1,6 @@
 const validator = require('validator')
 const ValidateSignUpData = (req) => {
+
     const { firstName, lastName, emailId, password } = req.body;
 
     if (!firstName || !lastName) {
@@ -13,5 +14,11 @@ const ValidateSignUpData = (req) => {
 
 
 }
+const validateProfileEdit = (req) => {
+    const ALLOWD_UPDATE = ['firstName', 'lastName', ,'photourl', 'skills', 'about', 'age']
+    const isAllowed = Object.keys(req.body).every((field) => ALLOWD_UPDATE.includes(field))
+    
+    return isAllowed;
+}
 
-module.exports = ValidateSignUpData
+module.exports = {ValidateSignUpData,validateProfileEdit}

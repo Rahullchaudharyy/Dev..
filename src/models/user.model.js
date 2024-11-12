@@ -41,12 +41,16 @@ const UserSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-
-        validate(value) {
-            if (!["male", "female", "other"].includes(value)) {
-                throw new Error("Gender Data is not valid  ")
-            }
+        enum:{
+            values:["male", "female", "other"],
+            message:`{VALUE} Is not valid gender`
         }
+
+        // validate(value) {
+        //     if (!["male", "female", "other"].includes(value)) {
+        //         throw new Error("Gender Data is not valid  ")
+        //     }
+        // }
 
     },
     photourl: {
@@ -75,8 +79,14 @@ const UserSchema = new mongoose.Schema({
     })
 
 
+    // UserSchema.methods.getJWT = async function () {
+    //     const user = this;
+    //     const token = await jwt.sign({_id:user._id},"SERCRET@KEY123")
+    //     return token
+    // }
+
     UserSchema.methods.getJWT = async function () {
-        const user = this;
+        const user = this ; 
         const token = await jwt.sign({_id:user._id},"SERCRET@KEY123")
         return token
     }
