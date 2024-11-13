@@ -11,7 +11,7 @@ const authRouter = express.Router()
 authRouter.post('/signup', async (req, res) => {
     try {
         // 1.Validating of the data 
-        const { firstName, lastName, emailId, password } = req.body
+        const { firstName, lastName, emailId, password,age } = req.body
         ValidateSignUpData(req)
         // 2.Encrypting/hash the password 
         const passwordHash = await bcrypt.hash(password, 10)
@@ -21,6 +21,7 @@ authRouter.post('/signup', async (req, res) => {
             lastName,
             emailId,
             password: passwordHash,
+            age
         })
         await user.save()
         res.status(201).send("User Created successfully!")

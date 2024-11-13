@@ -64,9 +64,10 @@ profileRouter.patch('/profile/password',UserAuth,async (req,res) => {
          
      }
      newPassword = await bcrypt.hash(newPassword,10)
- 
+
      user.password = newPassword;
      await user.save()
+     console.log("password Updated successfully !!! ")
      res.json({message:`${user.firstName} Your password is successfully Updated !!`})
 
    } catch (error) {

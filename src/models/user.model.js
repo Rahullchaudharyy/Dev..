@@ -37,8 +37,7 @@ const UserSchema = new mongoose.Schema({
     },
     age: {
         type: Number,
-        min: 18
-    },
+        min: 18,    },
     gender: {
         type: String,
         enum:{
