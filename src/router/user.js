@@ -1,6 +1,7 @@
 const express = require('express')
 const { UserAuth } = require('../middlewares/AuthMiddleware');
 const ConnectionRequest = require('../models/connectionRequest.model');
+const { User } = require('../models/user.model');
 
 const userRouter = express.Router()
 
@@ -14,14 +15,14 @@ userRouter.get('/user/connections', UserAuth, async (req, res) => {
             $or: [{ toUserId: loggedInUser._id, status: 'accepted' }, { fromUserId: loggedInUser._id, status: 'accepted' }],
 
 
-        }).populate("fromUserId",USER_SAFE_DATA)
+        }).populate("fromUserId", USER_SAFE_DATA)
 
         if (!foundConnection) {
             return res.json({
                 message: "connection not found "
             })
         }
-        const data = foundConnection.map((data)=> data.fromUserId)
+        const data = foundConnection.map((data) => data.fromUserId)
 
         res.status(200).json({
             data
@@ -48,7 +49,7 @@ userRouter.get('/user/requests/recieved', UserAuth, async (req, res) => {
             })
         }
 
-        const data = foundRequests.map((data)=> data.fromUserId)
+        const data = foundRequests.map((data) => data.fromUserId)
 
         res.status(200).json({
             data
@@ -59,20 +60,39 @@ userRouter.get('/user/requests/recieved', UserAuth, async (req, res) => {
 
 })
 
-// userRouter.get('/user/feed',async (req,res) => {
-//     try {
-//         const loggedInUser = req.user;
+//?page=1&limit=10
+userRouter.get('/user/feed', UserAuth, async (req, res) => {
+    try {
+        const loggedInUser = req.user;
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit
+        limit = limit > 20 ? 10 : limit;
 
-//         const RequestSentRecieve = await ConnectionRequest.find({
-//             $or:[{fromUserId:loggedInUser._id},{toUserId:loggedInUser._id}]
-//         }).select("firstName lastName")
 
-//         console.log(RequestSentRecieve)
-//         res.send(RequestSentRecieve)
-//     } catch (error) {
-//         res.status(200).send(error.message)
-//     }
-// })
+
+        const RequestSentRecieve = await ConnectionRequest.find({
+            $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }]
+        })
+
+
+        const HideUser = new Set()
+        RequestSentRecieve.forEach((req) => {
+            HideUser.add(req.fromUserId.toString())
+            HideUser.add(req.toUserId.toString())
+        })
+
+        const user = await User.find({
+            $and: [{ _id: { $nin: Array.from(HideUser) } },
+            { _id: { $ne: loggedInUser._id } }]
+        }).select("firstName lastName").skip(skip).limit(limit)
+        res.send(user)
+    } catch (error) {
+        console.log(error.message)
+
+        res.status(200).send(error.message)
+    }
+})
 
 module.exports = {
     userRouter
