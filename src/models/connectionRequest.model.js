@@ -17,7 +17,7 @@ const ConnectionRequestSchema = new mongoose.Schema({
         type:String,
         required:true,
         enum:{
-            values:["ignored","intrested","rejected","accepted","pending"],
+            values:["ignored","interested","rejected","accepted","pending"],
             message:`{VALUE} is incorrect status type`
         }
          // enum is nothing but its just use to define that there should be only limited predifined values , as you see in the above code how to define 

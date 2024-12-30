@@ -7,7 +7,18 @@ const { authRouter } = require('./router/auth.js');
 const { profileRouter } = require('./router/profile.js');
 const { requestRouter } = require('./router/request.js');
 const { userRouter } = require('./router/user.js');
+const cors = require('cors')
 const app = express();
+const dotenv = require('dotenv')
+dotenv.config();
+
+
+app.use(cors({
+  origin: 'http://localhost:5173',  // Specify the frontend's origin
+  credentials: true,  // Allow credentials
+}));
+
+
 app.use(express.json());
 app.use(cookieParser())
 
@@ -18,40 +29,6 @@ app.use('/',userRouter)
 
 
 // Get the data and store in the database
-
-
-
-// app.post('/signin', async (req, res) => {
-
-//     try {
-//         const { emailId, password } = req.body;
-
-//         if (!validator.isEmail(emailId)) {
-//             throw new Error('The email is not valid')
-//         }
-
-//         const user = await User.findOne({ emailId: emailId })
-//         const isPasswordValid = await user.verifyPassword(password)
-
-//         if (isPasswordValid) {
-//             const token = await user.getJWT()
-
-
-//             res.cookie("token", token)
-//             res.send("User logged in successfully")
-//         } else {
-//             throw new Error('invalid Credentials')
-//         }
-
-
-
-//     } catch (error) {
-//         res.status(401).send("Error occure :", error.message)
-//     }
-
-
-// })
-
 
 
 

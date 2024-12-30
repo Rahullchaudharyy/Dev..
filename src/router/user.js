@@ -11,21 +11,43 @@ userRouter.get('/user/connections', UserAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
 
-        const foundConnection = await ConnectionRequest.find({
-            $or: [{ toUserId: loggedInUser._id, status: 'accepted' }, { fromUserId: loggedInUser._id, status: 'accepted' }],
+        const foundConnections = await ConnectionRequest.find({
+            $or: [
+                { toUserId: loggedInUser._id, status: 'accepted' },
+                { fromUserId: loggedInUser._id, status: 'accepted' }
+            ]
+        })
+        .populate("fromUserId", USER_SAFE_DATA)
+        .populate("toUserId", USER_SAFE_DATA);
 
+        
 
-        }).populate("fromUserId", USER_SAFE_DATA)
-
-        if (!foundConnection) {
+        if (!foundConnections) {
             return res.json({
                 message: "connection not found "
             })
         }
-        const data = foundConnection.map((data) => data.fromUserId)
+        // console.log(foundConnections)
+        const ConnectedUser = await Promise.all(
+            foundConnections.map( async (connection) => {
+                if (connection.fromUserId._id.equals(loggedInUser._id)) {
+                    let Firstdata = await User.findById(connection.toUserId).select(USER_SAFE_DATA)
+                    console.log(Firstdata)
+                    // console.log(data)
+                    return Firstdata
+                } else{
+                    let Seconddata = await User.findById(connection.fromUserId).select(USER_SAFE_DATA)
+                    console.log(Seconddata)
+                    return Seconddata
+                }
+            })
+        )
+
+
+        console.log("The Connected User :-",ConnectedUser)
 
         res.status(200).json({
-            data
+            data:ConnectedUser
         })
     } catch (error) {
         res.status(400).send(error.message)
@@ -40,7 +62,7 @@ userRouter.get('/user/requests/recieved', UserAuth, async (req, res) => {
 
         const foundRequests = await ConnectionRequest.find({
             toUserId: loggedInUser._id,
-            status: 'intrested'
+            status: 'interested'
         }).populate("fromUserId", USER_SAFE_DATA)
 
         if (!foundRequests) {
@@ -49,7 +71,10 @@ userRouter.get('/user/requests/recieved', UserAuth, async (req, res) => {
             })
         }
 
+        console.log(foundRequests)
+
         const data = foundRequests.map((data) => data.fromUserId)
+        console.log(data)
 
         res.status(200).json({
             data
@@ -85,7 +110,7 @@ userRouter.get('/user/feed', UserAuth, async (req, res) => {
         const user = await User.find({
             $and: [{ _id: { $nin: Array.from(HideUser) } },
             { _id: { $ne: loggedInUser._id } }]
-        }).select("firstName lastName").skip(skip).limit(limit)
+        }).select("firstName lastName photourl").skip(skip).limit(limit)
         res.send(user)
     } catch (error) {
         console.log(error.message)

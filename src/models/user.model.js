@@ -60,7 +60,7 @@ const UserSchema = new mongoose.Schema({
                 throw new Error("Profile URL is not Correct")
             }
         },
-        default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fimages%2Fsearch%2Fblank%2520profile%2520picture%2F&psig=AOvVaw0SwKS--iDEpX6kuPRaxGy_&ust=1731050384092000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLicyqvXyYkDFQAAAAAdAAAAABAE"
+        default: "https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png"
 
     },
     about: {

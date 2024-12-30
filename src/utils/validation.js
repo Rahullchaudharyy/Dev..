@@ -7,15 +7,17 @@ const ValidateSignUpData = (req) => {
         throw new Error("Name is not Valid ! ")
     } else if (!validator.isEmail(emailId)) {
         throw new Error('Email is not valid')
-    } else if (!validator.isStrongPassword(password)) {
-        throw new Error('Please enter the String password !')
+    } 
 
-    }
+    // else if (!validator.isStrongPassword(password)) {
+    //     throw new Error('Please enter the String password !')
+
+    // }
 
 
 }
 const validateProfileEdit = (req) => {
-    const ALLOWD_UPDATE = ['firstName', 'lastName', ,'photourl', 'skills', 'about', 'age']
+    const ALLOWD_UPDATE = ['firstName', 'lastName', ,'photourl', 'skills', 'about', 'age','gender']
     const isAllowed = Object.keys(req.body).every((field) => ALLOWD_UPDATE.includes(field))
     
     return isAllowed;

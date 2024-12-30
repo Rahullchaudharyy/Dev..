@@ -10,7 +10,7 @@ requestRouter.post('/request/send/:status/:toIUserId', UserAuth, async (req, res
         const toUserId = req.params.toIUserId
         const status = req.params.status
 
-        const ALLOWED_STATUS = ['ignored','intrested']
+        const ALLOWED_STATUS = ['ignored','interested']
 
         if (!ALLOWED_STATUS.includes(status)) {
             return res.status(400).json({
@@ -56,7 +56,9 @@ requestRouter.post('/request/send/:status/:toIUserId', UserAuth, async (req, res
 requestRouter.post('/request/review/:status/:requestId',UserAuth,async (req,res) => {
    try {
      const loggedInUser = req.user;
+     console.log(loggedInUser)
      const {status,requestId } = req.params
+     console.log(requestId)
 
      const ALLOWED_STATUS = ['accepted','rejected']
 
@@ -67,8 +69,9 @@ requestRouter.post('/request/review/:status/:requestId',UserAuth,async (req,res)
      }
 
      const connectionRequest = await ConnectionRequest.findOne({
-        _id:requestId,
-        status:'intrested',
+        // _id:requestId,
+        fromUserId:requestId,
+        status:'interested',
         toUserId:loggedInUser._id
      })
 

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-
-
+const dotenv = require('dotenv')
+dotenv.config()
 const ConectDB = async ()=>{
-        await mongoose.connect('mongodb+srv://rahul:jxbfKkLumeUkwwGx@nodejs.23kbu.mongodb.net/devTinder')
+        await mongoose.connect(process.env.DB_URL)
 }   
 
 

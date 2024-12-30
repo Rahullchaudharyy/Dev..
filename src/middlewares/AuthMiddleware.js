@@ -21,7 +21,7 @@ const UserAuth =async (req, res, next) => {
     req.user = user // found user attahced into this request . Will be present in the request handler can be accessd like this :const user =  req.user 
     next()
   } catch (error) {
-    res.status(401).send("Error : " + error.message)
+    res.status(401).json({"Error : " : error.message})
   }  
 }
 

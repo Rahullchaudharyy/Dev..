@@ -23,17 +23,18 @@ profileRouter.get('/profile/view', UserAuth, async (req, res) => {
         // Dont need the Above code as it is already written in the Auth middleware . 
         const user = req.user // Comming from the middleware that is attached llike this , req.founduser = user 
         res.json({
-            "Currently logged in : ": user
+             user
         })
-
+      // res.send(user)
     } catch (error) {
         res.status(401).send("Error occure : " + error.message)
     }
 
 });
-profileRouter.patch('/profile/edit', UserAuth, async (req, res) => {
+profileRouter.put('/profile/edit', UserAuth, async (req, res) => {
   try {
     if (!validateProfileEdit(req)) {
+      console.log(req.body)
         throw new Error("Invalid edit Data ");
         
     }
