@@ -27,46 +27,7 @@ const io = new Server(server,{
 });
 
 
-// io.on("connection", (socket) => {
 
-//     console.log("User Connected")
-//     console.log("User : ", socket.id)
-//     // socket.emit("Wellcome", `Wellcome to the real time server${socket.id}`)
-//     socket.on('message',({room,message})=>{
-//         console.log(message)
-//         io.to(room).emit('recive-message',message)
-//     })
-//     socket.on('disconnect',()=>{
-//         console.log(`User disconnected ${socket.id}`);
-//     })
-
-// })
-// io.on("connection", (socket) => {
-//     console.log("User Connected:", socket.id);
-
-//     socket.on('message', async ({ sender, recipient, text }) => {
-//         try {
-//             // Save the message to the database
-//             const Areconnected = await areUsersConnected(sender,recipient)
-//             if(!Areconnected) return;
-//             const message = await Message.create({ sender, recipient, text });
-
-//             // Emit the message back to the recipient
-//             io.to(recipient).emit('receive-message', {
-//                 sender,
-//                 recipient,
-//                 text,
-//                 timestamp: message.timestamp
-//             });
-//         } catch (error) {
-//             console.error("Error saving message:", error.message);
-//         }
-//     });
-
-//     socket.on('disconnect', () => {
-//         console.log(`User disconnected: ${socket.id}`);
-//     });
-// });
 
 io.on("connection", (socket) => {
     console.log("User Connected:", socket.id);
